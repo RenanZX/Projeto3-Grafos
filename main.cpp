@@ -18,11 +18,11 @@ int main(){
   gr.InsereAresta(113034,113450, 10);
 
 
-  gr.ImprimirGrafo();*/
+  gr.ImprimirGrafo();
 
   InsereRegistros(&gr);
   gr.ImprimirGrafo();
   gr.ImprimirTopologicamente();
-  gr.ImprimirCaminhoCritico();
+  gr.ImprimirCaminhoCritico();*/
 	return 0;
 }

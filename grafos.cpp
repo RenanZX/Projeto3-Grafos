@@ -2,7 +2,7 @@
 
 Grafo::Grafo()
 {
-
+	elementoverificado = 0;
 }
 
 Grafo::~Grafo()
@@ -10,151 +10,131 @@ Grafo::~Grafo()
 
 }
 
-void Grafo::InsereVertice(int id,std::tuple<string,int,std::vector<string>> professorValor)
+void Grafo::InsereVertice(profValor professorValor)
 {
 	Vertice novovertice;
-	novovertice.valor = id;
-	novovertice.peso = 0;
+	novovertice.valor = -1;
+	novovertice.elos = 0;
+	novovertice.EscolaValor.nome = "";
+	novovertice.EscolaValor.habilitacoes = 0;
 	novovertice.ProfessorValor = professorValor;
 	lista_v.push_back(novovertice);
 }
 
-void InsereVertice(int id,std::tuple<string,int> escolaValor)
+void Grafo::InsereVertice(escolaValor escolaValor)
 {
 	Vertice novovertice;
-	novovertice.valor = id;
-	novovertice.peso = 0;
+	novovertice.valor = -1;
+	novovertice.elos = 0;
+	novovertice.ProfessorValor.nome = "";
+	novovertice.ProfessorValor.habilitacoes = 0;
 	novovertice.EscolaValor = escolaValor;
 	lista_v.push_back(novovertice);	
 }
 
-void Grafo::InsereAresta(int v1,int v2,int peso)
+void Grafo::InsereVertice(int valor)
 {
-	int i = 0;
-
-	while((i!=lista_v.size())&&(v1 != lista_v[i].valor)){
-		i++;
-	}
-	if(i == lista_v.size()){
-		return;
-	}
-	int j = 0;
-	while((j!=lista_v.size())&&(v2 != lista_v[j].valor)){
-		j++;
-	}
-	if(j == lista_v.size()){
-		return;
-	}
-	Vertice novaAresta;
-	novaAresta.valor = v2;
-	novaAresta.peso = peso;
-	lista_v[i].listaAdjArest.push_back(novaAresta);
+	Vertice novovertice;
+	novovertice.elos = 0;
+	novovertice.valor = valor;
+	novovertice.ProfessorValor.nome = "";
+	novovertice.ProfessorValor.habilitacoes = 0;
+	novovertice.EscolaValor.nome = "";
+	novovertice.EscolaValor.habilitacoes = 0;
+	lista_v.push_back(novovertice);	
 }
 
 void Grafo::ImprimirGrafo()
 {
 	int i=0,j=0;
 
-	for(i=0;i<lista_v.size();i++){
-		cout << lista_v[i].valor;
-		for(j=0;j < lista_v[i].listaAdjArest.size();j++){
+	if(TADEscola()){
+		for(i=0;i<(signed)lista_v.size();i++){
+			cout << "Escola:" << lista_v[i].EscolaValor.nome << ":" << lista_v[i].EscolaValor.habilitacoes;
+		for(j=0;j < (signed)lista_v[i].listaAdjArest.size();j++){
+			cout << "->" << lista_v[i].listaAdjArest[j].ProfessorValor.nome << ":" << lista_v[i].listaAdjArest[j].ProfessorValor.habilitacoes;
+		}
+			cout << endl;
+		}
+	}else if(TADProfessor()){
+		for(i=0;i<(signed)lista_v.size();i++){
+			cout << "Professor:" << lista_v[i].ProfessorValor.nome << ":" << lista_v[i].ProfessorValor.habilitacoes;
+		for(j=0;j < (signed)lista_v[i].listaAdjArest.size();j++){
+			cout << "->" << lista_v[i].listaAdjArest[j].EscolaValor.nome << ":" << lista_v[i].listaAdjArest[j].EscolaValor.habilitacoes;
+		}
+			cout << endl;
+		}
+	}else{
+		for(i=0;i<(signed)lista_v.size();i++){
+			cout << lista_v[i].valor;
+		for(j=0;j < (signed)lista_v[i].listaAdjArest.size();j++){
 			cout << "->" << lista_v[i].listaAdjArest[j].valor;
 		}
-		cout << endl;
+			cout << endl;
+		}
 	}
 }
 
-Caminho Grafo::getMaiorCaminho(int v)throw(runtime_error)
+bool Grafo::TADEscola()
 {
-	Caminho maiorCaminho_v;
-	maiorCaminho_v.somapesos = 0;
-	Caminho maiorCaminho;
-	Caminho candidatoMaior;
+	if((lista_v[0].EscolaValor.nome != "")&&(lista_v[0].EscolaValor.habilitacoes!=0)){
+		return true;
+	}
+	return false;
+}
+
+bool Grafo::TADProfessor()
+{
+	if((lista_v[0].ProfessorValor.nome != "")&&(lista_v[0].ProfessorValor.habilitacoes!=0)&&(!lista_v[0].ProfessorValor.listaEscola.empty())){
+		return true;
+	}
+	return false;
+}
+
+bool Grafo::TADValor()
+{
+	if(lista_v[0].valor != -1){
+		return true;
+	}
+	return false;
+}
+
+
+bool Grafo::VerificarRequisitos(int habilitacoes,string escola){
 	int i=0;
 
-	maiorCaminho.path.push_back(v);
-	maiorCaminho.somapesos = 0;
-
-	while((i!=lista_v.size())&&(lista_v[i].valor != v)){
+	while((i!=(signed)lista_v.size())&&(lista_v[i].EscolaValor.nome!=escola)){
 		i++;
 	}
-	if(i == lista_v.size()){
-		throw runtime_error("Impossivel Calcular Maior Caminho");
+	if(i!=(signed)lista_v.size()){
+		if((habilitacoes >= lista_v[i].EscolaValor.habilitacoes)&&(lista_v[i].elos!=2)){
+			elementoverificado = i;
+			lista_v[i].elos++;
+			return true;
+		}
+		elementoverificado = -1;
 	}
+	return false;
+}
 
-	int j=0;
-	if(!lista_v[i].listaAdjArest.empty()){
-		for(j=0;j<lista_v[i].listaAdjArest.size();j++){
-			try{
-				candidatoMaior = getMaiorCaminho(lista_v[i].listaAdjArest[j].valor);
-				candidatoMaior.somapesos+=lista_v[i].listaAdjArest[j].peso;
-			}catch(runtime_error &e){
-			}
-			if(candidatoMaior.somapesos > maiorCaminho_v.somapesos){
-				maiorCaminho_v = candidatoMaior;
+void Grafo::Emparelhar(Grafo grafo){
+	if((TADProfessor())&&(grafo.TADEscola())){
+		for(int i=0;i<(signed)lista_v.size();i++){
+			std::vector<string> listaEscolas = lista_v[i].ProfessorValor.listaEscola;
+			int j = listaEscolas.size();
+			while(j!=-1){
+				if(grafo.VerificarRequisitos(lista_v[i].ProfessorValor.habilitacoes,listaEscolas[j])){
+					lista_v[i].listaAdjArest.push_back(grafo.lista_v[grafo.elementoverificado]);
+				}
+				j--;
 			}
 		}
 	}
-	maiorCaminho.path.insert(maiorCaminho.path.end(),maiorCaminho_v.path.begin(),maiorCaminho_v.path.end());
-	maiorCaminho.somapesos+=maiorCaminho_v.somapesos;
-	return maiorCaminho;
+
 }
 
-bool Grafo::ExistemArestas(int v){
-	int i =0;
-
-	while((i!=lista_v.size())&&(v!=lista_v[i].valor)){
-		i++;
-	}
-	if((i == lista_v.size())||(lista_v[i].listaAdjArest.empty())){
-		return false;
-	}
-	return true;
-}
-
-bool Grafo::EstaMarcado(int n){
-	int i = 0;
-
-	while((i!=marcados.size())&&(marcados[i] != n)){
-		i++;
-	}
-	if(i == marcados.size()){
-		return false;
-	}
-	return true;
-}
-
-void Grafo::Marcar(int v){
-	marcados.push_back(v);
-}
-
-void Grafo::LimparMarcas(){
-	marcados.clear();
-}
-
-void Grafo::VisitaNo(Vertice n){
-	int j = 0;
-	if(!EstaMarcado(n.valor)){
-		Marcar(n.valor);
-		for(j=0;j < n.listaAdjArest.size();j++){
-			VisitaNo(n.listaAdjArest[j]);
-		}
-		Ordenado.push_back(n.valor);
-	}
-}
-
-void Grafo::Ordem_Topologica(){
-	std::vector<Vertice> S = lista_v;
-	Vertice n;
-
-	for(int i=0;i<S.size();i++){
-		n = S[i];
-		VisitaNo(n);
-	}
-	LimparMarcas();
-}
-
-void EmparelhareImprimir(Grafo grafo)
+void Grafo::EmparelhareImprimir(Grafo grafo)
 {
-
+	Emparelhar(grafo);
+	ImprimirGrafo();
 }

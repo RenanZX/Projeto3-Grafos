@@ -1,3 +1,4 @@
+CXXFLAGS= -Wall
 all:programa limpar
 programa: main.o grafos.o dados.o
 	g++ -o Projeto2 grafos.o dados.o main.o
