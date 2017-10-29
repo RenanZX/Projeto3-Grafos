@@ -1,7 +1,7 @@
 # Projeto3-Grafos
 Projeto consiste em implementar um algoritmo de emparelhamento perfeito entre dois conjuntos(Professores e Escolas),com preferências,que forneça uma solução estável embasada em um problema de concurso público de professores para escolas públicas.
 
-Neste projeto,implementamos o algoritmo visando ponto de vista ótimo para os professores
+Neste projeto,implementamos o algoritmo visando ponto de vista ótimo para os professores.
 
 
 # Instruções de Compilação e Execução
