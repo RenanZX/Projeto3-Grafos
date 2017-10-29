@@ -7,24 +7,48 @@
 
 using namespace std;
 
+typedef struct EValor{
+  string nome;
+  int habilitacoes;
+  int vagas;
+  bool operator==(const struct EValor& v2){
+    if((nome == v2.nome)&&(habilitacoes == v2.habilitacoes)&&(vagas == v2.vagas)){
+      return true;
+    }
+    return false;
+  }
+  bool operator!=(const struct EValor& v2){
+    if((nome != v2.nome)&&(habilitacoes != v2.habilitacoes)&&(vagas != v2.vagas)){
+      return true;
+    }
+    return false;
+  }
+}escolaValor;
+
 typedef struct PValor{
   string nome;
   int habilitacoes;
   std::vector<string> listaEscola;
+  bool professor_livre;
+  bool operator==(const struct PValor& v2){
+    if((nome == v2.nome)&&(habilitacoes == v2.habilitacoes)&&(professor_livre == v2.professor_livre)){
+      return true;
+    }
+    return false;
+  }
+  bool operator!=(const struct PValor& v2){
+    if((nome != v2.nome)&&(habilitacoes != v2.habilitacoes)&&(professor_livre != v2.professor_livre)){
+      return true;
+    }
+    return false;
+  }
 }profValor;
-
-typedef struct EValor{
-  string nome;
-  int habilitacoes;
-}escolaValor;
 
 class Vertice{ /*classe do vertice*/
 friend class Grafo;
 private:
   profValor ProfessorValor;
   escolaValor EscolaValor;
-  int valor;
-  int elos;
   std::vector<Vertice> listaAdjArest; /*lista de Adjacencia*/
 };
 
@@ -41,9 +65,12 @@ private:
   std::vector<Vertice> lista_v; /*lista de vertices do grafo*/
   bool TADEscola();
   bool TADProfessor();
-  bool TADValor();
-  bool VerificarRequisitos(int habilitacoes,string escola);
+  void Inicializar_valores();
+  int ExisteProfessorLivre();
+  void LiberarProfessor(const profValor& professor,const escolaValor& escola);
+  int PiorProfessor(int index_escola);
   void Emparelhar(Grafo grafo);
+  int getValorEscola(string escola);
 public:
   Grafo(); /*construtor e destrutor do grafo*/
   ~Grafo();
