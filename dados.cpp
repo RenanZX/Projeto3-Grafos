@@ -26,12 +26,12 @@ void InsereRegistros(Grafo *prof, Grafo *Escolas){
 
       // Teste para debugger.
       
-      cout << "###cod:"<< cod << " habProf:" << hab 
+      /*cout << "###cod:"<< cod << " habProf:" << hab 
       << " TMP[0]: "<< tmp[0] 
       << " TMP[1]: "<< tmp[1]
       << " TMP[2]: "<< tmp[2]
       << " TMP[3]: "<< tmp[3]
-      << " TMP[4]: "<< tmp[4] << endl;
+      << " TMP[4]: "<< tmp[4] << endl;*/
 
       
       vector<string> v1(tmp,tmp+5);
