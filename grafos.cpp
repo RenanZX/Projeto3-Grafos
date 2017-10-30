@@ -80,16 +80,27 @@ int Grafo::ExisteProfessorLivre(){
 	return -1;
 }
 
-int Grafo::getValorEscola(string escola){
-	int i=0;
-	while((i!=(signed)lista_v.size())&&(lista_v[i].EscolaValor.nome != escola)){
-		i++;
+int Grafo::ExisteProfessorLivre_semLista(){
+	int i =0;
+
+	for(i=0;i<(signed)lista_v.size();i++){
+		if((lista_v[i].ProfessorValor.professor_livre == true)&&(lista_v[i].ProfessorValor.listaEscola.empty())){
+			return i;
+		}
 	}
 
-	if(i==(signed)lista_v.size()){
-		return -1;
+	return -1;	
+}
+
+int Grafo::getValorEscola(string escola){
+	int i=0;
+
+	for(i=0;i<(signed)lista_v.size();i++){
+		if(lista_v[i].EscolaValor.nome == escola){
+			return i;
+		}
 	}
-	return i;
+	return i-1;
 }
 
 int Grafo::PiorProfessor(int index_escola){
@@ -175,6 +186,7 @@ void Grafo::Emparelhar(Grafo grafo){
 				}
 			}
 
+
 			/*verifica se a escola está cheia*/
 			if(grafo.lista_v[escola].EscolaValor.vagas == 0){
 				int pior = grafo.PiorProfessor(escola); /*pega o indice do pior professor da lista de professores da escola*/
@@ -189,17 +201,22 @@ void Grafo::Emparelhar(Grafo grafo){
 					grafo.lista_v[escola].listaAdjArest.erase(grafo.lista_v[escola].listaAdjArest.begin()+sucessores,grafo.lista_v[escola].listaAdjArest.end());
 				}
 			}
+
 			i=ExisteProfessorLivre(); /*verifica o proximo*/
-			if(lista_v[i].ProfessorValor.listaEscola.empty()){/*caso exista algum professor livre que não tenha escolas para serem alocados*/
-				escola = grafo.ExistemVagas(); /*encontra-se uma vaga disponível para que possa alocá-lo*/
-				if(escola!=-1){	/*e ele é alocado para esta escola*/
-					lista_v[i].ProfessorValor.professor_livre = false;
-					grafo.lista_v[escola].listaAdjArest.push_back(lista_v[i]);  /*associa temporiariamente este professor a esta escola*/
-					lista_v[i].listaAdjArest.push_back(grafo.lista_v[escola]);
-					i=ExisteProfessorLivre(); /*encontra o proximo professor*/
-				}
+		}
+
+		i=0;
+		while(i!=-1){ /*verifica se existem professores sem escola e tenta associa-los as vagas restantes*/
+			i=ExisteProfessorLivre();
+			int escola = grafo.ExistemVagas();
+			if((escola!=-1)&&(i!=-1)){
+				lista_v[i].ProfessorValor.professor_livre = false;
+				grafo.lista_v[escola].EscolaValor.vagas--;
+				grafo.lista_v[escola].listaAdjArest.push_back(lista_v[i]);  /*associa temporiariamente este professor a esta escola*/
+				lista_v[i].listaAdjArest.push_back(grafo.lista_v[escola]);
 			}
 		}
+
 	}
 
 }

@@ -73,8 +73,8 @@ private:
   std::vector<Vertice> lista_v; /*lista de vertices do grafo*/
   bool TADEscola();
   bool TADProfessor();
-  //void OrdenarListaProfessores(int index_escola);
   void Inicializar_valores();
+  int ExisteProfessorLivre_semLista();
   int ExisteProfessorLivre();
   void LiberarProfessor(const profValor& professor,const escolaValor& escola);
   int PiorProfessor(int index_escola);
