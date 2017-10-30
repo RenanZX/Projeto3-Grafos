@@ -119,6 +119,9 @@ int Grafo::PiorProfessor(int index_escola){
 		}
 	}
 
+	std::sort(lista_prof.begin(),lista_prof.end(),OrderBy());
+	lista_v[index_escola].listaAdjArest = lista_prof;
+
 	int limite = lista_prof.size();
 
 	if((i==limite)&&(!achou)){

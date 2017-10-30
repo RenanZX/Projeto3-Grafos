@@ -4,6 +4,7 @@
 #include <string>
 #include <stdexcept>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -46,10 +47,17 @@ typedef struct PValor{
 
 class Vertice{ /*classe do vertice*/
 friend class Grafo;
+friend struct OrderBy;
 private:
   profValor ProfessorValor;
   escolaValor EscolaValor;
   std::vector<Vertice> listaAdjArest; /*lista de Adjacencia*/
+};
+
+struct OrderBy{
+  inline bool operator() (const Vertice& v1,const Vertice& v2){
+    return(v1.ProfessorValor.habilitacoes < v2.ProfessorValor.habilitacoes);
+  }
 };
 
 class Caminho{ /*classe contendo um caminho do grafo*/
@@ -65,6 +73,7 @@ private:
   std::vector<Vertice> lista_v; /*lista de vertices do grafo*/
   bool TADEscola();
   bool TADProfessor();
+  //void OrdenarListaProfessores(int index_escola);
   void Inicializar_valores();
   int ExisteProfessorLivre();
   void LiberarProfessor(const profValor& professor,const escolaValor& escola);
