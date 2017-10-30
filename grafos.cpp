@@ -109,7 +109,6 @@ int Grafo::PiorProfessor(int index_escola){
 	int piorhabilitacao = 3;
 	int i =0;
 	bool achou = false;
-	Vertice aux;
 	std::vector<Vertice>lista_prof = lista_v[index_escola].listaAdjArest;
 
 	for(i=0;i<(signed)lista_prof.size();i++){
