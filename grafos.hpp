@@ -79,6 +79,7 @@ private:
   void LiberarProfessor(const profValor& professor,const escolaValor& escola);
   int PiorProfessor(int index_escola);
   void Emparelhar(Grafo grafo);
+  int ExistemVagas();
   int getValorEscola(string escola);
 public:
   Grafo(); /*construtor e destrutor do grafo*/

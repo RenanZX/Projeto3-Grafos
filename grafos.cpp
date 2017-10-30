@@ -31,23 +31,12 @@ void Grafo::InsereVertice(escolaValor escolaValor)
 void Grafo::ImprimirGrafo()
 {
 	int i=0,j=0;
-
-	if(TADEscola()){
-		for(i=0;i<(signed)lista_v.size();i++){
-			cout << "Escola:" << lista_v[i].EscolaValor.nome << "\n habilitacoes:" << lista_v[i].EscolaValor.habilitacoes;
-			for(j=0;j < (signed)lista_v[i].listaAdjArest.size();j++){
-				cout << "professores contratados:" << lista_v[i].listaAdjArest[j].ProfessorValor.nome << ",";
-			}
-			cout << "." << endl;
+	for(i=0;i<(signed)lista_v.size();i++){
+		cout << "Professor:" << lista_v[i].ProfessorValor.nome << "\n habilitacoes:" << lista_v[i].ProfessorValor.habilitacoes << "\n";
+		for(j=0;j < (signed)lista_v[i].listaAdjArest.size();j++){
+			cout << "Escola alocada:" << lista_v[i].listaAdjArest[j].EscolaValor.nome;
 		}
-	}else if(TADProfessor()){
-		for(i=0;i<(signed)lista_v.size();i++){
-			cout << "Professor:" << lista_v[i].ProfessorValor.nome << "\n habilitacoes:" << lista_v[i].ProfessorValor.habilitacoes << "\n";
-			for(j=0;j < (signed)lista_v[i].listaAdjArest.size();j++){
-				cout << "Escola alocada:" << lista_v[i].listaAdjArest[j].EscolaValor.nome;
-			}
-			cout << "\n" << endl;
-		}
+		cout << "\n" << endl;
 	}
 }
 
@@ -82,13 +71,12 @@ void Grafo::Inicializar_valores(){
 int Grafo::ExisteProfessorLivre(){
 	int i =0;
 
-	while((i!=(signed)lista_v.size())&&(lista_v[i].ProfessorValor.professor_livre!=true)){
-		i++;
+	for(i=0;i<(signed)lista_v.size();i++){
+		if(lista_v[i].ProfessorValor.professor_livre == true){
+			return i;
+		}
 	}
 
-	if(lista_v[i].ProfessorValor.professor_livre == true){
-		return i;
-	}
 	return -1;
 }
 
@@ -150,6 +138,15 @@ void Grafo::LiberarProfessor(const profValor& professor,const escolaValor& escol
 	}
 }
 
+int Grafo::ExistemVagas(){
+	for(int i=0;i<(signed)lista_v.size();i++){
+		if(lista_v[i].EscolaValor.vagas > 0){
+			return i;
+		}
+	}
+	return -1;
+}
+
 void Grafo::Emparelhar(Grafo grafo){
 	if((TADProfessor())&&(grafo.TADEscola())){
 		Inicializar_valores();
@@ -184,12 +181,24 @@ void Grafo::Emparelhar(Grafo grafo){
 				if(pior != -1){
 					int sucessores = pior+1;/*libera todos os sucessores do pior professor desta escola*/
 					for(int k = sucessores;k < (signed)grafo.lista_v[escola].listaAdjArest.size();k++){
-						LiberarProfessor(grafo.lista_v[escola].listaAdjArest[k].ProfessorValor,grafo.lista_v[escola].EscolaValor);
+						if(grafo.lista_v[escola].listaAdjArest[k].ProfessorValor.habilitacoes > grafo.lista_v[escola].listaAdjArest[pior].ProfessorValor.habilitacoes){
+							LiberarProfessor(grafo.lista_v[escola].listaAdjArest[k].ProfessorValor,grafo.lista_v[escola].EscolaValor);
+							grafo.lista_v[escola].EscolaValor.vagas++;
+						}
 					}/*deleta todos os sucessores do pior professor da lista de preferencia das escolas*/
 					grafo.lista_v[escola].listaAdjArest.erase(grafo.lista_v[escola].listaAdjArest.begin()+sucessores,grafo.lista_v[escola].listaAdjArest.end());
 				}
 			}
 			i=ExisteProfessorLivre(); /*verifica o proximo*/
+			if(lista_v[i].ProfessorValor.listaEscola.empty()){/*caso exista algum professor livre que não tenha escolas para serem alocados*/
+				escola = grafo.ExistemVagas(); /*encontra-se uma vaga disponível para que possa alocá-lo*/
+				if(escola!=-1){	/*e ele é alocado para esta escola*/
+					lista_v[i].ProfessorValor.professor_livre = false;
+					grafo.lista_v[escola].listaAdjArest.push_back(lista_v[i]);  /*associa temporiariamente este professor a esta escola*/
+					lista_v[i].listaAdjArest.push_back(grafo.lista_v[escola]);
+					i=ExisteProfessorLivre(); /*encontra o proximo professor*/
+				}
+			}
 		}
 	}
 
