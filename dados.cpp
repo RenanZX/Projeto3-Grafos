@@ -25,7 +25,7 @@ void InsereRegistros(Grafo *prof, Grafo *Escolas){
       iss >> cod >> hab >> tmp[0] >> tmp[1] >> tmp[2] >> tmp[3] >> tmp[4]; // pegando da variavel iss e salvando nas variaveis correspondete
 
       // Teste para debugger.
-      /*
+      
       cout << "###cod:"<< cod << " habProf:" << hab 
       << " TMP[0]: "<< tmp[0] 
       << " TMP[1]: "<< tmp[1]
@@ -33,7 +33,7 @@ void InsereRegistros(Grafo *prof, Grafo *Escolas){
       << " TMP[3]: "<< tmp[3]
       << " TMP[4]: "<< tmp[4] << endl;
 
-      */
+      
       vector<string> v1(tmp,tmp+5);
       prof->InsereVertice((profValor){cod,hab,v1});
     }        
